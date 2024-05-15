@@ -10,7 +10,7 @@ resource "azurerm_virtual_network" "myVnet" {
   location            = var.location
   resource_group_name = "miGruopDeResource"
 }
-/*
+
 resource "azurerm_subnet" "mySubnet" {
   name                 = "miSubnet"
   resource_group_name  = azurerm_resource_group.myRg.name
@@ -18,6 +18,7 @@ resource "azurerm_subnet" "mySubnet" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+/*
 resource "azurerm_network_security_group" "my_nsg" {
   name                = "myNSG"
   location            = var.location
