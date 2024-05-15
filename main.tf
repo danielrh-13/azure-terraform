@@ -7,6 +7,7 @@ module "networking" {
   location            = var.locations
 }
 
+/*
 module "VM1" {
   source               = "./modules/vm"
   name_vm              = "VMCVH1"
@@ -30,3 +31,4 @@ module "VM2" {
   public_ip            = "myPublicIP2"
   subnet_id            = module.networking.my_subnet 
 }
+*/
