@@ -9,4 +9,11 @@ terraform {
       version = "~> 2.48"
     }
   }
+
+  backend "azurerm" {
+    resource_group_name   = "miGruopDeResource"
+    storage_account_name  = "mystorageterraform"
+    container_name        = "tfstate"
+    key                   = "terraform.tfstate"
+  }
 }
