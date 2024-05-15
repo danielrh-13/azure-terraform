@@ -24,7 +24,30 @@ jobs:
         with:
           terraform_version: 1.0.0
 
+      - name: Install expect
+        run: sudo apt-get install -y expect
+
+      - name: Create unlock script
+        run: |
+          echo '#!/usr/bin/expect
+          set timeout -1
+          spawn terraform force-unlock $env(LOCK_ID)
+          expect {
+            "Do you really want to force-unlock?" {
+              send "yes\r"
+              exp_continue
+            }
+          }' > unlock.expect
+          chmod +x unlock.expect
+
+      - name: Attempt to unlock Terraform state
+        if: ${{ failure() && steps.init.outcome == 'failure' }}
+        env:
+          LOCK_ID: $(echo $(terraform force-unlock -list | grep "Lock ID:" | awk '{print $3}'))
+        run: ./unlock.expect || true
+
       - name: Terraform Init
+        id: init
         run: terraform init -reconfigure
 
       - name: Terraform Plan
