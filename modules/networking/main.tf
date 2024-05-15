@@ -2,7 +2,7 @@ resource "azurerm_resource_group" "myRg" {
   name     = "miGruopDeResource"
   location = var.location
 }
-
+/*
 resource "azurerm_virtual_network" "myVnet" {
   name                = "miVnet"
   address_space       = ["10.0.0.0/16"]
@@ -66,3 +66,4 @@ resource "azurerm_subnet_network_security_group_association" "my_subnet_nsg_asso
   subnet_id                 = azurerm_subnet.mySubnet.id
   network_security_group_id = azurerm_network_security_group.my_nsg.id
 }
+*/
