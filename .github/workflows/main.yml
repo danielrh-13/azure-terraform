@@ -27,7 +27,20 @@ jobs:
       - name: Install expect
         run: sudo apt-get install -y expect
 
-      - name: Create unlock script
+      - name: Terraform Init
+        id: init
+        run: terraform init -reconfigure
+
+      - name: Check for state lock
+        id: check_lock
+        run: |
+          LOCK_INFO=$(terraform show -json | jq -r .terraform.locks[]?)
+          if [ -n "$LOCK_INFO" ]; then
+            echo "LOCK_ID=$(echo $LOCK_INFO | jq -r .id)" >> $GITHUB_ENV
+          fi
+
+      - name: Attempt to unlock Terraform state
+        if: ${{ env.LOCK_ID }}
         run: |
           echo '#!/usr/bin/expect
           set timeout -1
@@ -39,16 +52,7 @@ jobs:
             }
           }' > unlock.expect
           chmod +x unlock.expect
-
-      - name: Attempt to unlock Terraform state
-        if: ${{ failure() && steps.init.outcome == 'failure' }}
-        env:
-          LOCK_ID: $(echo $(terraform force-unlock -list | grep "Lock ID:" | awk '{print $3}'))
-        run: ./unlock.expect || true
-
-      - name: Terraform Init
-        id: init
-        run: terraform init -reconfigure
+          ./unlock.expect
 
       - name: Terraform Plan
         run: terraform plan
