@@ -1,15 +1,16 @@
-resource "azurerm_resource_group" "myRg" {
+/*resource "azurerm_resource_group" "myRg" {
   name     = "miGruopDeResource"
   location = var.location
-}
-/*
+}*/
+
+
 resource "azurerm_virtual_network" "myVnet" {
   name                = "miVnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = azurerm_resource_group.myRg.name
+  resource_group_name = miGruopDeResource
 }
-
+/*
 resource "azurerm_subnet" "mySubnet" {
   name                 = "miSubnet"
   resource_group_name  = azurerm_resource_group.myRg.name
