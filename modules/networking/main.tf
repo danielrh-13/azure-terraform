@@ -8,7 +8,7 @@ resource "azurerm_virtual_network" "myVnet" {
   name                = "miVnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = miGruopDeResource
+  resource_group_name = "miGruopDeResource"
 }
 /*
 resource "azurerm_subnet" "mySubnet" {
