@@ -37,9 +37,9 @@ jobs:
       - name: Check for state lock
         id: check_lock
         run: |
-          LOCK_ID=$(terraform state pull | jq -r 'select(.lock != null) | .lock.id')
-          if [ -n "$LOCK_ID" ]; then
-            echo "LOCK_ID=$LOCK_ID" >> $GITHUB_ENV
+          LOCK_INFO=$(terraform show -json | jq -r '.values.outputs.lock_id.value // empty')
+          if [ -n "$LOCK_INFO" ]; then
+            echo "LOCK_ID=$LOCK_INFO" >> $GITHUB_ENV
           fi
 
       - name: Attempt to unlock Terraform state
