@@ -27,9 +27,6 @@ jobs:
       - name: Terraform Init
         run: terraform init -reconfigure
 
-      - name: Attempt to unlock Terraform state
-        run: echo "yes" | terraform force-unlock e5d9b650-6267-2d2e-4dda-f2857d7d353a || true
-
       - name: Terraform Plan
         run: terraform plan
 
