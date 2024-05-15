@@ -24,14 +24,30 @@ jobs:
         with:
           terraform_version: 1.0.0
 
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
       - name: Install expect
         run: sudo apt-get install -y expect
 
+      - name: Terraform Init
+        id: init
+        run: terraform init -reconfigure
+
+      - name: Check for state lock
+        id: check_lock
+        run: |
+          LOCK_ID=$(terraform state pull | jq -r 'select(.lock != null) | .lock.id')
+          if [ -n "$LOCK_ID" ]; then
+            echo "LOCK_ID=$LOCK_ID" >> $GITHUB_ENV
+          fi
+
       - name: Attempt to unlock Terraform state
+        if: env.LOCK_ID
         run: |
           echo '#!/usr/bin/expect
           set timeout -1
-          spawn terraform force-unlock 4e17ee61-ce68-9eae-f5f0-589bf1b697d2
+          spawn terraform force-unlock $env(LOCK_ID)
           expect {
             "Do you really want to force-unlock?" {
               send "yes\r"
@@ -40,9 +56,6 @@ jobs:
           }' > unlock.expect
           chmod +x unlock.expect
           ./unlock.expect || true
-
-      - name: Terraform Init
-        run: terraform init -reconfigure
 
       - name: Terraform Plan
         run: terraform plan
