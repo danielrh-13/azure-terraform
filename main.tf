@@ -3,13 +3,14 @@ provider "azurerm" {
   skip_provider_registration = true
 }
 
-/*
+
 module "networking" {
   source              = "./modules/networking"
   location            = var.locations
+  groupname           = var.group_name
 }
 
-
+/*
 module "VM1" {
   source               = "./modules/vm"
   name_vm              = "VMCVH1"

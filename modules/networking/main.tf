@@ -8,21 +8,21 @@ resource "azurerm_virtual_network" "myVnet" {
   name                = "miVnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = "miGruopDeResource"
+  resource_group_name = var.groupname
 }
 
 resource "azurerm_subnet" "mySubnet" {
   name                 = "miSubnet"
-  resource_group_name  = "miGruopDeResource"
+  resource_group_name  = var.groupname
   virtual_network_name = azurerm_virtual_network.myVnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
-/*
+
 resource "azurerm_network_security_group" "my_nsg" {
   name                = "myNSG"
   location            = var.location
-  resource_group_name = azurerm_resource_group.myRg.name
+  resource_group_name = var.groupname
 
   // Permitir el tráfico saliente a internet
   security_rule {
@@ -68,4 +68,4 @@ resource "azurerm_subnet_network_security_group_association" "my_subnet_nsg_asso
   subnet_id                 = azurerm_subnet.mySubnet.id
   network_security_group_id = azurerm_network_security_group.my_nsg.id
 }
-*/
+
