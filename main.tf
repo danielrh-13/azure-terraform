@@ -6,8 +6,25 @@ provider "azurerm" {
 
 module "networking" {
   source              = "./modules/networking"
-  location            = var.locations
   groupname           = var.group_name
+  location            = var.locations
+}
+
+module "storage" {
+  source = "./modules/storage"
+  resource_group_name = var.group_name
+  location = var.locations
+}
+
+module "Databric" {
+  source              = "./modules/databricks"
+  resource_group_name = var.group_name
+  location            = var.locations
+  vnet                = module.networking.my_vnet
+  subnet              = module.networking.name_subnet
+  subnet_private      = module.networking.name_subneprivate
+  nsg_mysubnet        = module.networking.nsg_mysubnet
+  nsg_mysubneprivate  = module.networking.nsg_mysubneprivate
 }
 
 /*
